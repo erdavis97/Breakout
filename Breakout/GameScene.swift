@@ -20,6 +20,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var score = 0
     var lives = 3
     var removedBricks = 0
+    var newLives = 0
     
     override func didMove(to view: SKView) {
         //this stuff happens once (when the app opens)
@@ -40,7 +41,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func kickBall() {
         ball.physicsBody?.isDynamic = true
-        ball.physicsBody?.applyImpulse(CGVector(dx: 3, dy: 5))
+        ball.physicsBody?.applyImpulse(CGVector(dx: Int.random(in: -5...5), dy: 5))
     }
     
     func updateLabels () {
@@ -195,7 +196,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if contact.bodyA.node == brick ||
                 contact.bodyB.node == brick {
                 score += 1
+                //increase ball velocity by 2%
+                ball.physicsBody!.velocity.dx *= CGFloat(1.02)
+                ball.physicsBody!.velocity.dy *= CGFloat(1.02)
                 updateLabels()
+                newLives = Int.random(in: 1...20)
+                if newLives == 5 {
+                    lives += 1
+                }
                 if brick.color == .blue {
                     brick.color = .orange //blue bricks turn orange
                 }
